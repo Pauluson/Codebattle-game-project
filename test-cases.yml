@@ -1,0 +1,545 @@
+---
+- summary: |
+    Проверка регистрации пользователя
+  requirement: |
+    Пользователь должен иметь возможность зарегистрироваться
+  prerequisites: |
+    Открыта страница регистрации
+  test-data: |
+    url = https://codebattle.hexlet.io/users/new?locale=en&next=%2F
+    nickname = 
+    password = testpassword123
+  steps:
+    - Ввести никнейм (от 3 до 16 знаков, только латинские буквы, цифры и нижнее подчеркивание)
+    - Ввести почту
+    - Ввести пароль(от 6 до 16 знаков)
+    - Ввести пароль повторно
+    - Нажимаем кнопку «Submit»
+  expected-result: |
+    Пользователь должен попасть на главную страницу
+
+- summary: |
+    Проверка авторизации пользователя на сайт
+  requirement: |
+    Пользователь должен иметь возможность авторизоваться
+  prerequisites:
+    Открыта страница логина
+  test-data: |
+    url = https://codebattle.hexlet.io/session/new?locale=en&next=%2F
+    email = test.mail@gmail.com
+    password = testpassword123
+  steps:
+    - Ввести email
+    - Ввести пароль
+    - Нажимаем кнопку «Submit»
+  expected-result: |
+    Пользователь должен попасть на главную страницу
+
+- summary: |
+    Проверка входа пользователя с несуществующими логином и паролем
+  requirement: |
+    При неправильном логине или пароле пользователь должен получить сообщение об ошибке
+  prerequisites:
+    Открыта страница логина
+  test-data: |
+    url = https://codebattle.hexlet.io/session/new?locale=en&next=%2F
+    email = example@.com
+    password = pass123
+  steps:
+    - Вводим логин
+    - Вводим пароль
+    - Нажимаем кнопку «Submit»
+  expected-result: |
+    Пользователь должен получить сообщение об ошибке
+
+- summary: |
+    Проверка регистрации пользователя при некорректном вводе данных
+  requirement: |
+    При неправильных никнейме, почте и пароля пользователь должен получить сообщение об ошибке
+  prerequisites:
+    Открыта страница регистрации
+  test-data: |
+    url = https://codebattle.hexlet.io/users/new?locale=en&next=%2F
+    nickname = поле пустое
+    email = example.com
+    password = pass123
+  steps:
+    - Вводим никнейм
+    - Вводим логин
+    - Вводим пароль
+    - Вводим пароль повторно
+    - Нажимаем кнопку «Submit»
+  expected-result: |
+    Пользователь должен получить сообщение об ошибке
+
+- summary: |
+    Проверка создания игры
+  requirement: |
+    Пользователь должен иметь вохможность создавать игру
+  prerequisites:
+    Открыта главная страница
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Нажимаем кнопку «Create Battle»
+  expected-result: |
+    Пользователь находится в режиме ожидания второго игрока
+
+- summary: |
+    Проверка создания игры c опрделенными параметрами
+  requirement: |
+    Пользователь должен иметь возможность выбирать уровень сложности, тип игры и время на игру
+  prerequisites:
+    Открыта главная страница
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+    Фильтр Level = одна звезда
+    Фильтр Game Type = With a bot
+    Фильтр Time Control = 10 min
+    Фильтр Tags = math
+    Фильтр Choose task by name or tags = «rect_area»
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Level»
+    - Выбираем фильтр «Game Type»
+    - Выбираем фильтр «Time Control»
+    - Нажимаем кнопку «Create Battle»
+  expected-result: |
+    Пользователя перебросило на страницу игры
+
+- summary: |
+    Проверка фильтра «Choose task by name or tags»
+  requirement: |
+    Пользователь должен иметь возможность выбирать тип задачи
+  prerequisites:
+    Открыта главная страница
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+    Фильтр Game Type = With a bot
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Game Type»
+    - Нажимаем на фильтр «Choose task by name or tags»
+    - Выбираем из списка задачу
+    - Нажимаем кнопку «Create Battle»
+  expected-result: |
+    Пользователя перебросило на страницу игры в условии которой стоит ранее выбранная задача
+
+- summary: |
+    Проверка фильтра «Tags»
+  requirement: |
+    Пользователь должен иметь возможность фильтровать задачи при создании игры
+  prerequisites:
+    Открыта главная страница
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+    Фильтр Tags = math
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Tags»
+    - Нажимаем на фильтр «Choose task by name or tags»
+  expected-result: |
+    Отобразились задача, согласно выьранному фильтру
+
+- summary: |
+    Проверка отображение кода другого пользователя в игре
+  requirement: |
+    Пользователь должен видеть код другого пользователя во время игры
+  prerequisites:
+    Выполнена авторизация под user1
+    Выполнена авторизация под user2 в режиме инкогнито
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+    user1 :
+      email = user1@email.com
+      password = 1234
+    user2 :
+      email = user2@email.com
+      password = 4321
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Нажимаем кнопку «Create Battle»
+    - Нажимаем кнопку «Continue»
+    - Копируем ссылку
+    - Переходим по ссылке под user2
+    - Вводим любой текст в редакторе кода
+  expected-result: |
+    Первый пользователь увидел изменения в редакторе кода второго пользотвателя
+
+- summary: |
+    Проверка изменения языка отображения
+  requirement: |
+    Пользователь во время игры может сменить язык
+  prerequisites:
+    Открыта главная страница
+  test-data: |
+     url = https://codebattle.hexlet.io/#lobby
+     Фильтр Game Type = With a bot
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Game Type»
+    - Нажимаем кнопку «Create Battle»
+    - Выбираем язык отображения над описанием задачи
+  expected-result: |
+    Описание задачи переведено согласно выбранному языку
+
+- summary: |
+    Проверка отображения описания задания и времени отведенного на игру
+  requirement: |
+    Пользователь должен иметь возможность видеть отведенное время на игру и описание задания
+  prerequisites:
+    Открыта главная страница
+  test-data: |
+     url = https://codebattle.hexlet.io/#lobby
+     Фильтр Game Type = With a bot
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Game Type»
+    - Нажимаем кнопку «Create Battle»
+  expected-result: |
+    Пользователь видит описание задания и отведенное время на его выполнение
+
+- summary: |
+    Проверка неограниченных попыток проверки решения
+  requirement: |
+    Пользователь имеет неограниченное количество попыток для проверки своего решения
+  prerequisites:
+    Открыта главная страница
+  test-data: |
+     url = https://codebattle.hexlet.io/#lobby
+     Фильтр Game Type = With a bot
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Game Type»
+    - Нажимаем кнопку «Create Battle»
+    - Нажимаем кнопку «Check» несколько раз
+  expected-result: |
+    Игра не закончена, пользователь может продолжать играть
+
+- summary: |
+    Проверка отображение модального окна с информацией о победителе
+  requirement: |
+    Пользователь должен иметь возможность увидеть модальное окно с информацией кто выиграл
+  prerequisites:
+    Открыта главная страница
+  test-data: |
+     url = https://codebattle.hexlet.io/#lobby
+     Фильтр Game Type = With a bot
+     Фильтр Choose task by name or tags = rect_area
+     Код =  def solution(width, length)
+              return width * length
+            end
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Game Type»
+    - Выбираем фильтр «Choose task by name or tags»
+    - Нажимаем кнопку «Create Battle»
+    - Выбираем язык программирования Ruby
+    - Вставляем код в редактор
+  expected-result: |
+    Пользователь увидел модальное окно с информацией о победителе
+  
+- summary: |
+    Проверка возможность возможность выполнить задания, в случае проигрыша
+  requirement: |
+    Пользователь должен иметь возможность доиграть, в случае проигрыша
+  prerequisites:
+    Выполнена авторизация под user1
+    Выполнена авторизация под user2 в режиме инкогнито
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+    user1 :
+      email = user1@email.com
+      password = 1234
+    user2 :
+      email = user2@email.com
+      password = 4321
+    Фильтр Game Type = With a bot
+    Фильтр Choose task by name or tags = rect_area
+    Код =  def solution(width, length)
+             return width * length
+           end
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Game Type»
+    - Выбираем фильтр «Choose task by name or tags»
+    - Нажимаем кнопку «Create Battle»
+    - Нажимаем кнопку «Continue»
+    - Копируем ссылку
+    - Переходим по ссылке под user2
+    - Выбираем язык программирования Ruby
+    - Вставляем код в редактор
+  expected-result: |
+    Первый пользователь проиграл, но может доиграть
+
+- summary: |
+    Проверка возможность возврата в игру
+  requirement: |
+    Пользователь должен иметь возможность вернуться в игру в случае вылета
+  prerequisites:
+    Открыта главная страница
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+    Фильтр Game Type = With a bot
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Game Type»
+    - Нажимаем кнопку «Create Battle»
+    - Закрываем страницу в браузере
+    - Переходим на главнуб страницу
+    - Нажимаем кнопку «Continue»
+  expected-result: |
+    Пользователь вернулся в ранее созданную игру и может продолжить играть
+
+- summary: |
+    Проверка завершения игры после выхода из неё пользователей
+  requirement: |
+    Игра должна считаться законченной, когда оба пользователя вышли из неё
+  prerequisites:
+    Выполнена авторизация под user1
+    Выполнена авторизация под user2 в режиме инкогнито
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+    user1 :
+      email = user1@email.com
+      password = 1234
+    user2 :
+      email = user2@email.com
+      password = 4321
+    Фильтр Game Type = With other user
+    Фильтр Choose task by name or tags = rect_area
+    Код =  def solution(width, length)
+             return width * length
+           end
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Game Type»
+    - Выбираем фильтр «Choose task by name or tags»
+    - Нажимаем кнопку «Create Battle»
+    - Нажимаем кнопку «Continue»
+    - Копируем ссылку
+    - Переходим по ссылке под user2
+    - Выбираем язык программирования Ruby
+    - Вставляем код в редактор
+    - Выходим из игры под user2
+    - Выходим из игры под user1
+    - Перейти по ссылке из шестого шага
+  expected-result: |
+    Отображается, что игра завершена
+
+- summary: |
+    Проверка использования чата
+  requirement: |
+    Пользователь, который зарегистрирован должен иметь возможность пользоваться чатом
+  prerequisites:
+    Выполнена авторизация под user1
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+    user1 :
+      email = user1@email.com
+      password = 1234
+  steps:
+    - Вводим в поле чата любой текст
+    - Отправляем текст
+  expected-result: |
+    Пользователь может отправлять сообщения и видеть сообщения других пользователей
+
+- summary: |
+    Проверка просмотра записи игры
+  requirement: |
+    Завершенная игра доступна в записи, в которой редактор кода выглядит как проигрыватель
+  prerequisites:
+    Открыта главная страница сайта
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+  steps:
+    - Нажимаем на вкладку «History»
+    - Выбираем запись из списка
+    - Нажимаем на кнопку «Show»
+  expected-result: |
+    Открылась страница с игрой и началась воспроизводиться в режиме проигрывателя запись игры
+
+- summary: |
+    Проверка отображения рейтинга за неделю, месяц и за всё время
+  requirement: |
+    На основе очков, должен строится рейтинг за неделю, месяц и за все время
+  prerequisites:
+    Открыта главная страница
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+  steps:
+    - Нажимаем на свой никнейм
+    - Выбираем из списка «Users rating»
+    - Выбираем «weekly»
+    - Выбираем «monthly»
+    - Выбираем «total» 
+  expected-result: |
+    Во всех фильтрах рейтинг отображается корректно, согласно убыванию очков
+
+- summary: |
+    Проверка просмотра чужой игры в реальном времени
+  requirement: |
+    Пользователь может следить за ходом чужой игры
+  prerequisites:
+    Открыта главная страница
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+  steps:
+    - Нажимаем на вкладку «Lobby»
+    - Выбираем из списка игру
+    - Нажимаем на кнопку «Show»
+  expected-result: |
+    Открылась страница чужой игры и действия происходят в реальном времени
+  
+- summary: |
+    Проверка получение очков
+  requirement: |
+    Пользователь должен получать очки
+  prerequisites:
+    Выполнена авторизация под user1
+    Выполнена авторизация под user2 в режиме инкогнито
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+    user1 :
+      email = user1@email.com
+      password = 1234
+    user2 :
+      email = user2@email.com
+      password = 4321
+    Фильтр Game Type = With other user
+    Фильтр Choose task by name or tags = rect_area
+    Код =  def solution(width, length)
+             return width * length
+           end
+  steps:
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Game Type»
+    - Выбираем фильтр «Choose task by name or tags»
+    - Нажимаем кнопку «Create Battle»
+    - Нажимаем кнопку «Continue»
+    - Копируем ссылку
+    - Переходим по ссылке под user2
+    - Выбираем язык программирования Ruby
+    - Вставляем код в редактор
+    - Выходим из игры под user2
+    - Выходим из игры под user1
+  expected-result: |
+    У обоих польхователей изменились суммарное количество очков (у победителя стало больше, у проигравшего меньше)
+
+- summary: |
+    Проверка мобильной версии сайта
+  requirement: |
+    Сайт должен иметь мобильную версию
+  prerequisites:
+    Открыт браузер
+  test-data: |
+    url = https://codebattle.hexlet.io/#lobby
+    Фильтр Game Type = With a bot
+  steps:
+    - Перейти по ссылке
+    - Открыть DevTools(Ctrl + Shift + M)
+    - Выбрать мобильное устройство
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Game Type»
+    - Нажимаем кнопку «Create Battle»
+    - Выбираем язык отображения
+    - Нажимаем на свой никнейм
+    - Выбираем из списка «My profile»
+    - Выбираем из списка «Settings»
+    - Выбираем из списка «Tasks»
+    - Выбираем из списка «Users rating»
+  expected-result: |
+    Верстка и контент отображается корректно
+
+- summary: |
+    Проверка кроссбраузернности
+  requirement: |
+    Сайт должен быть протестирован на совместимость с последними версиями браузеров
+  prerequisites:
+    Открыт браузер
+  test-data: |
+    Браузер Google Chrome Version 123.0.6312.86/87 (Official Build) (64-bit)
+    Браузер Firefox 124.0.1
+    Браузер Safari 5.1.7
+    url = https://codebattle.hexlet.io/#lobby
+    Фильтр Game Type = With a bot
+  steps:
+    - Открыть главную страницу
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Game Type»
+    - Нажимаем кнопку «Create Battle»
+    - Выбираем язык отображения
+    - Нажимаем на свой никнейм
+    - Выбираем из списка «My profile»
+    - Выбираем из списка «Settings»
+    - Выбираем из списка «Tasks»
+    - Выбираем из списка «Users rating»
+  expected-result: |
+    Сайт отображается одинаково хорошо во всех браузерах
+
+- summary: |
+    Проверка кроссплатформенности
+  requirement: |
+    Сайт должен быть кроссплатформенным
+  prerequisites:
+    Открыт браузер
+  test-data: |
+    ОС macOS — 14.4.1
+    ОС Windows 10
+    ОС Ubuntu 20.04.6 LTS
+    url = https://codebattle.hexlet.io/#lobby
+    Фильтр Game Type = With a bot
+  steps:
+    - Открыть главную страницу
+    - Нажимаем кнопку «Create A Game»
+    - Выбираем фильтр «Game Type»
+    - Нажимаем кнопку «Create Battle»
+    - Выбираем язык отображения
+    - Нажимаем на свой никнейм
+    - Выбираем из списка «My profile»
+    - Выбираем из списка «Settings»
+    - Выбираем из списка «Tasks»
+    - Выбираем из списка «Users rating»
+  expected-result: |
+    Сайт отображается одинаково хорошо на всех операционных системах
+
+- summary: |
+    Проверка обработки большого количества трафика
+  requirement: |
+    Сайт должен быть способен обрабатывать большое количество трафика
+  prerequisites:
+    Открыто приложение Apache JMeter
+  test-data: |
+    number of threades = 100
+    ramp-up period = 100
+    loop count = 10
+    protocol = http
+    server name or ip = codebattle.hexlet.io
+  steps:
+    - Создать Thread Group
+    - Заполнить поля
+    - Создать HTTP Request Defaults
+    - Заполнить поля
+    - Создать HTTP Request
+    - Заполнить поля
+    - Создать Graph Results
+    - Запустить тест
+  expected-result: |
+    Результаты теста показывают большую пропускную спосбность сайта
+
+- summary: |
+    Проверка оптимизации и скорсти работы сайта
+  requirement: |
+    Сайт должен быть разработан с учетом удобства использования и оптимизирован для скорости работы
+  prerequisites:
+    Открыто браузер
+  test-data: |
+    first_url = https://pagespeed.web.dev/
+    second_url = https://codebattle.hexlet.io/
+  steps:
+    - Перейти по первой ссылке
+    - Вставить в поле вторую ссылку
+    - Нажать на кнопку «Analyze»
+  expected-result: |
+    Скорость работы и оптимизации сайта имеет высокий уровень
